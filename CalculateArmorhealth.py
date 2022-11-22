@@ -2,6 +2,8 @@ from PullChampionStats import *
 import csv
 import pandas as pd
 from GetItems import *
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 class CalculationMachine(object):
@@ -168,5 +170,20 @@ class CalculationMachine(object):
                 val += 1
             i+=1
         return val
-newcalc = CalculationMachine("Vayne", 6, [])
-newcalc.hpOrResistances()
+    def calculateHeartSteel(self, xProcs):
+        self.changeItems(["Heartsteel"])
+        procs = np.array(range(1, 1000))
+        hp_values = np.zeros(len(procs))
+        health_gained = np.zeros(len(procs))
+        for idx, i in enumerate(procs):
+            cur_gained = 12.5 + 0.006 * self.hp
+            self.hp += cur_gained
+            hp_values[idx] = self.hp+cur_gained
+            health_gained[idx] = cur_gained
+        plt.plot(procs, health_gained)
+        plt.show()
+        print(f"At {xProcs} procs, {self.champion} would have {hp_values[xProcs]} with {np.sum(health_gained[0:xProcs])} health gained from HeartSteel passive.")
+
+newcalc = CalculationMachine("Vayne", 11, [])
+# newcalc.hpOrResistances()
+newcalc.calculateHeartSteel(100)
